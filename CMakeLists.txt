@@ -101,14 +101,15 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 add_custom_target(package_all)
 
+set(PACKAGE_DIR ${CMAKE_BINARY_DIR}/packaged)
 # Define the function for packaging files
 function(package_files src target)
     string(UUID name NAMESPACE "a5f4f2bb-85a3-5811-33f6-2e74d5cccdb4" NAME "${src}:${target}"
        TYPE SHA1 UPPER)
     add_custom_target(
         "package_file_${name}" ALL
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/packaged/${target}"
-        COMMAND ${CMAKE_COMMAND} -E copy "${src}" "${CMAKE_BINARY_DIR}/packaged/${target}/"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${PACKAGE_DIR}/${target}"
+        COMMAND ${CMAKE_COMMAND} -E copy "${src}" "${PACKAGE_DIR}/${target}/"
         COMMENT "${name}: Copying ${src} to /${target}"
     )
     add_dependencies(package_all package_file_${name})
@@ -118,9 +119,9 @@ function(package_dir src target)
        TYPE SHA1 UPPER)
     add_custom_target(
         package_dir_${name} ALL
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/packaged/${target}"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory "${src}" "${CMAKE_BINARY_DIR}/packaged/${target}"
-        COMMENT "Packaging directory ${src} to ${CMAKE_BINARY_DIR}/packaged/${target}"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${PACKAGE_DIR}/${target}"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${src}" "${PACKAGE_DIR}/${target}"
+        COMMENT "Packaging directory ${src} to ${PACKAGE_DIR}/${target}"
         COMMENT "${name}: Copying ${src} to /${target}"
     )
 
