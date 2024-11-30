@@ -783,9 +783,9 @@ FOX5Image FOX5File::getImage(uint32_t id)
 }
 
 FOX5File::FOX5File(const std::string& filename) :
-    mFile(filename, std::ios::binary)
+    mFile(filename, std::ios::in | std::ios::binary)
 {
-    if (!mFile) throw std::runtime_error("Failed to open file.");
+    if (!mFile || !mFile.is_open()) throw std::runtime_error("Failed to open file.");
     
     mFile.seekg(0, std::ios::end);
     if(mFile.tellg() < 20) throw std::runtime_error("Too small to be a FOX5 file.");
@@ -807,11 +807,11 @@ FOX5File::FOX5File(const std::string& filename) :
     uint32_t dbCompressedSize = readUint32(mFile);
     uint32_t dbUncompressedSize = readUint32(mFile);
     
-    char magic[9] = {0};
+    char magic[8] = {0};
     mFile.read(magic, 8);
     if (!mFile) throw std::runtime_error("Failed to read magic from FOX5.");
     
-    if(std::string(magic, sizeof(magic) - 1) != "FOX5.1.1")
+    if(std::string(magic, sizeof(magic)) != "FOX5.1.1")
         throw std::runtime_error("Not a FOX5 file.");
     
     
@@ -862,4 +862,13 @@ FOX5File::FOX5File(const std::string& filename) :
         throw std::runtime_error("File level list should always have 1 entry");
     
     parseData(&pointer, dataEnd);
+    printf("Fox5 loaded\n");
+}
+
+FOX5File::~FOX5File()
+{
+    if(mFile && mFile.is_open())
+    {
+        mFile.close();
+    }
 }

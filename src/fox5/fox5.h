@@ -401,6 +401,7 @@ public:
     FOX5Image getImage(uint32_t id);
 public:
     FOX5File(const std::string& filename);
+    ~FOX5File();
     
     void parseData(uint8_t** dataPtr, uint8_t* dataEnd);
 };

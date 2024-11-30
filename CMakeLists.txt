@@ -4,19 +4,19 @@ set(PROJECT_NAME MyProject)
 
 # Cross compiling
 if (NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-    if (TARGET_EMSCRIPTEN)
+    if(PLATFORM STREQUAL "EMSCRIPTEN")
         execute_process(COMMAND em-config EMSCRIPTEN_ROOT OUTPUT_VARIABLE EMSCRIPTEN_ROOT OUTPUT_STRIP_TRAILING_WHITESPACE)
         set(CMAKE_TOOLCHAIN_FILE "${EMSCRIPTEN_ROOT}/cmake/Modules/Platform/Emscripten.cmake"  CACHE STRING "Toolchain file for Emscripten")
         
-    elseif(TARGET_PSVITA)
+    elseif(PLATFORM STREQUAL "PSVITA")
         set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE STRING "Toolchain file for PSVita")
         include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
         
-    elseif (TARGET_N3DS)
+    elseif(PLATFORM STREQUAL "N3DS")
         set(CMAKE_TOOLCHAIN_FILE "$ENV{DEVKITPRO}/cmake/3DS.cmake" CACHE STRING "Toolchain file for 3DS")
         set(N3DS ON CACHE STRING "Target N3DS") #DevkitPro doesn't seem to set a variable like this
     
-    elseif (TARGET_MINGW64)
+    elseif(PLATFORM STREQUAL "MINGW64")
         # the name of the target operating system
         set(CMAKE_SYSTEM_NAME Windows)
 
@@ -35,7 +35,7 @@ if (NOT DEFINED CMAKE_TOOLCHAIN_FILE)
         set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
         set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
     
-    elseif (TARGET_MINGW32)
+    elseif(PLATFORM STREQUAL "MINGW32")
         # the name of the target operating system
         set(CMAKE_SYSTEM_NAME Windows)
 

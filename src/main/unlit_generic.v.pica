@@ -37,7 +37,8 @@
 	dp4 outpos.w, projection[3], r1
 
 	mov outtc0, intex
-	mov outclr, ones
+	mov outclr, inclr
+	
 	; We're finished
 	end
 .end

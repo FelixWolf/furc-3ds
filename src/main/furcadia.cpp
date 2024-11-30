@@ -130,7 +130,9 @@ DVLB_s* loadShader(const std::string& path) {
     if (!vshader_dvlb) {
         std::cerr << "Failed to parse shader: " << path << std::endl;
     }
-
+    
+    printf("Loaded shader %s\n", path.c_str());
+    
     return vshader_dvlb;
 }
 C3D_Tex texture;
@@ -210,16 +212,12 @@ void Furcadia::initialize()
     uint16_t imageWidth = nextPowerOf2(image.mWidth);
     uint16_t imageHeight = nextPowerOf2(image.mHeight);
     */
-    
-    FOX5File data = FOX5File("romfs:/3ds/system.fox");
-    
     int totalBytes = gimp_image.width * gimp_image.height * gimp_image.bytes_per_pixel;
     uint8_t* pixelSrcData = new uint8_t[totalBytes];
     memcpy(pixelSrcData, gimp_image.pixel_data, totalBytes);
     
     C3D_TexInit(&texture, 128, 128, GPU_RGB8);
     uint8_t* pixelData = padImage(pixelSrcData, gimp_image.width, gimp_image.height, 3, 128, 128, 0);
-    
     reverse_morton_order(pixelData, 128, 128, 3);
     C3D_TexUpload(&texture, pixelData);
     
@@ -235,6 +233,7 @@ void Furcadia::initialize()
     C3D_TexEnvInit(env);
     C3D_TexEnvSrc(env, C3D_Both, GPU_TEXTURE0, GPU_PRIMARY_COLOR);
     C3D_TexEnvFunc(env, C3D_Both, GPU_MODULATE);
+    printf("Init complete\n");
 }
 
 void Furcadia::update()
