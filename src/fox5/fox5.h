@@ -287,7 +287,7 @@ public:
             : mCommand(command), mArg1(arg1), mArg2(arg2) {}
     };
     
-    std::vector<std::unique_ptr<Kitterspeak>> mKitterspeak;
+    std::vector<std::shared_ptr<Kitterspeak>> mKitterspeak;
     
     std::vector<std::shared_ptr<FOX5Frame>> mFrames;
     
@@ -373,6 +373,8 @@ protected:
     std::ifstream mFile;
 
 public: // Footer
+    std::string mName;
+    
     uint8_t mSeed[16] = {0};
     
     enum class CompressionType : uint8_t

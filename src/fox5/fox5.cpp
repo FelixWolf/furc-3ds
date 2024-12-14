@@ -1,4 +1,5 @@
 #include <cstring>
+#include <algorithm>
 #include "fox5.h"
 #include "LzmaDec.h"
 
@@ -372,11 +373,11 @@ void FOX5Command::parseData(uint8_t** dataPtr, uint8_t* dataEnd)
         case FOX5Command::Command::FRAME_ATTACH_SOCKETS:
         {
             uint16_t count = readUint16(dataPtr, dataEnd);
-            reserveValues(1 + (count * 3));
+            reserveValues(1 + (count * 4));
             addValue(FOX5Command::Type::UInt16, static_cast<uint16_t>(count));
             for(uint16_t i = 0; i < count; i++)
             {
-                addValue(FOX5Command::Type::UInt8, static_cast<uint8_t>(readUint16(dataPtr, dataEnd)));
+                addValue(FOX5Command::Type::UInt8, static_cast<uint8_t>(readUint8(dataPtr, dataEnd)));
                 addValue(FOX5Command::Type::Int16, static_cast<int16_t>(readInt16(dataPtr, dataEnd)));
                 addValue(FOX5Command::Type::Int16, static_cast<int16_t>(readInt16(dataPtr, dataEnd)));
                 addValue(FOX5Command::Type::Int16, static_cast<int16_t>(readInt16(dataPtr, dataEnd)));
@@ -556,7 +557,7 @@ void FOX5Shape::parseData(uint8_t** dataPtr, uint8_t* dataEnd)
                 for(uint16_t i = 0; i < count; i++)
                 {
                     uint16_t tmp = cmd.getValue<uint16_t>();
-                    mKitterspeak[i] = std::make_unique<Kitterspeak>(
+                    mKitterspeak[i] = std::make_shared<Kitterspeak>(
                         tmp,
                         cmd.getValue<int16_t>(),
                         cmd.getValue<int16_t>()
@@ -782,10 +783,29 @@ FOX5Image FOX5File::getImage(uint32_t id)
     return im;
 }
 
+std::string getBasename(const std::string& path)
+{
+    // Find the last directory separator, considering both '/' and '\\'
+    size_t lastSeparator = path.find_last_of("/\\");
+    
+    // If no separator is found, return the entire path as the basename
+    if (lastSeparator == std::string::npos)
+    {
+        return path;
+    }
+
+    // Extract and return the substring after the last separator
+    return path.substr(lastSeparator + 1);
+}
+
 FOX5File::FOX5File(const std::string& filename) :
     mFile(filename, std::ios::in | std::ios::binary)
 {
     if (!mFile || !mFile.is_open()) throw std::runtime_error("Failed to open file.");
+    mName = getBasename(filename);
+    
+    std::transform(mName.begin(), mName.end(), mName.begin(),
+                   [](unsigned char c) { return std::tolower(c); });
     
     mFile.seekg(0, std::ios::end);
     if(mFile.tellg() < 20) throw std::runtime_error("Too small to be a FOX5 file.");

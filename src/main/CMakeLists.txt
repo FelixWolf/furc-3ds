@@ -1,14 +1,29 @@
 # Add the executable target for the main module
-project(main)
+project(main LANGUAGES C CXX ASM)
 
 set(main_SOURCE_FILES
     appbase.cpp
+    3dstexture.cpp
+    3dsshader.cpp
+    texturecache.cpp
+    sprite.cpp
+    scene.cpp
+    spritescene.cpp
+    demoscene.cpp
     furcadia.cpp
     main.cpp
 )
 
 set(main_HEADER_FILES
     appbase.h
+    3dstexture.h
+    3dsshader.h
+    texturecache.h
+    singleton.h
+    sprite.h
+    scene.h
+    spritescene.h
+    demoscene.h
     furcadia.h
     testimg.h
     main.h
@@ -27,6 +42,7 @@ include_directories(${GENERATED_DIR})
 add_executable(${PROJECT_NAME}
     ${main_SOURCE_FILES}
 )
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
 if (N3DS)
     target_include_directories(${PROJECT_NAME} PRIVATE $ENV{DEVKITPRO}/libctru/include)
@@ -60,9 +76,11 @@ if (N3DS)
         DEPENDS ${GENERATED_HEADERS}
     )
     add_dependencies(${PROJECT_NAME} GeneratePicaShaders)
+    dkp_target_generate_symbol_list(${PROJECT_NAME})
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE lzma fox5)
+target_compile_options(${PROJECT_NAME} PRIVATE -Og)
 
 add_custom_target(ElfTo3dsx ALL
     COMMAND 3dsxtool $<TARGET_FILE:main> "${PACKAGE_DIR}/${PROJECT_NAME}.3dsx" --smdh="${PROJECT_SOURCE_DIR}/icon.icn" --romfs="${PACKAGE_DIR}/assets/"
