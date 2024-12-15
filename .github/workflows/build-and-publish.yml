@@ -1,0 +1,59 @@
+name: Build and Publish
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y build-essential cmake wget git python3 python3-pip libncurses5 libtinfo5
+            sudo apt-get clean
+
+      - name: Install DevkitPro's Pacman
+        run: |
+            wget -O /tmp/install-devkitpro-pacman https://apt.devkitpro.org/install-devkitpro-pacman
+            chmod +x /tmp/install-devkitpro-pacman
+            yes | sudo /tmp/install-devkitpro-pacman
+            rm /tmp/install-devkitpro-pacman
+
+      - name: Install DevkitARM from DevkitPro
+        run: sudo dkp-pacman -Sy --noconfirm 3ds-dev
+    
+      # This works, but isn't perfect. Ideally we'd use $DEVKITPRO to refer to
+      # the /opt/devkitpro directory in sequential definitions, but github
+      # doesn't like that.
+      - name: Setup environment
+        run: |
+            echo "DEVKITPRO=/opt/devkitpro" >> $GITHUB_ENV
+            echo "DEVKITARM=/opt/devkitpro/devkitARM" >> $GITHUB_ENV
+            echo "PATH=$PATH:/opt/devkitpro/tools/bin" >> $GITHUB_ENV
+      
+      - name: Configure build
+        run: bash configure.sh
+      
+      - name: Build application
+        run: bash build.sh
+      
+      - name: Rename binaries
+        run: |
+          mv build/build-3ds/packaged/main.3dsx build/build-3ds/packaged/furcadia.3dsx
+      
+      - uses: actions/upload-artifact@v4
+        with:
+            name: Application
+            path: |
+                build/build-3ds/packaged/furcadia.3dsx
+            if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
