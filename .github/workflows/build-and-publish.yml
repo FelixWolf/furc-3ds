@@ -35,8 +35,8 @@ jobs:
       - name: Setup environment
         run: |
             echo "DEVKITPRO=/opt/devkitpro" >> $GITHUB_ENV
-            echo "DEVKITARM=$DEVKITPRO/devkitARM" >> $GITHUB_ENV
-            echo "PATH=$PATH:$DEVKITPRO/tools/bin" >> $GITHUB_ENV
+            echo "DEVKITARM=/opt/devkitpro/devkitARM" >> $GITHUB_ENV
+            echo "PATH=$PATH:/opt/devkitpro/tools/bin" >> $GITHUB_ENV
       
       - name: Configure build
         run: bash configure.sh
