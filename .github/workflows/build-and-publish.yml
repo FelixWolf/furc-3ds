@@ -24,10 +24,10 @@ jobs:
 
       - name: Install DevkitPro's Pacman
         run: |
-            wget https://apt.devkitpro.org/install-devkitpro-pacman
-            chmod +x install-devkitpro-pacman
-            yes | sudo ./install-devkitpro-pacman
-            rm install-devkitpro-pacman
+            wget -O /tmp/install-devkitpro-pacman https://apt.devkitpro.org/install-devkitpro-pacman
+            chmod +x /tmp/install-devkitpro-pacman
+            yes | sudo /tmp/install-devkitpro-pacman
+            rm /tmp/install-devkitpro-pacman
 
       - name: Install DevkitARM from DevkitPro
         run: sudo dkp-pacman -Sy --noconfirm 3ds-dev
