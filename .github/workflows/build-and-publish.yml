@@ -43,3 +43,9 @@ jobs:
       
       - name: Build application
         run: bash build.sh
+      
+      - uses: actions/upload-artifact@v4
+        with:
+            name: Application (3DSX)
+            path: build/build-3ds/packaged/main.3dsx
+            if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
