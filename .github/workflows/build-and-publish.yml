@@ -1,0 +1,45 @@
+name: Build and Publish
+
+on:
+  push:
+    branches:
+      - gh-actions
+  pull_request:
+    branches:
+      - actions
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y build-essential cmake wget git python3 python3-pip libncurses5 libtinfo5
+            sudo apt-get clean
+
+      - name: Install DevkitPRO's Pacman
+        run: |
+            wget https://apt.devkitpro.org/install-devkitpro-pacman
+            chmod +x install-devkitpro-pacman
+            yes | ./install-devkitpro-pacman
+            rm install-devkitpro-pacman
+
+      - name: Install DevkitARM from DevkitPRO
+        run: dkp-pacman -Sy --noconfirm 3ds-dev
+    
+      - name: Setup environment
+        run: |
+            echo "DEVKITPRO=/opt/devkitpro" >> $GITHUB_ENV
+            echo "DEVKITARM=$DEVKITPRO/devkitARM" >> $GITHUB_ENV
+            echo "PATH=$PATH:$DEVKITPRO/tools/bin" >> $GITHUB_ENV
+      
+      - name: Configure build
+        run: bash configure.sh
+      
+      - name: Build application
+        run: bash build.sh
