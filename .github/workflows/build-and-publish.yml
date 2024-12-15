@@ -17,10 +17,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Install DevkitARM from DevkitPro
-        run: sudo dkp-pacman -Sy --noconfirm 3ds-dev
-    
+        
       - name: Configure build
         run: bash configure.sh
       
