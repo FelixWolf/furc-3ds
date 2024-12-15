@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-cmake --build build
+cmake --build build -j$(nproc)
