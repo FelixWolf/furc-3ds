@@ -3,10 +3,10 @@ name: Build and Publish
 on:
   push:
     branches:
-      - gh-actions
+      - main
   pull_request:
     branches:
-      - actions
+      - main
 
 jobs:
   build:
@@ -32,6 +32,9 @@ jobs:
       - name: Install DevkitARM from DevkitPro
         run: sudo dkp-pacman -Sy --noconfirm 3ds-dev
     
+      # This works, but isn't perfect. Ideally we'd use $DEVKITPRO to refer to
+      # the /opt/devkitpro directory in sequential definitions, but github
+      # doesn't like that.
       - name: Setup environment
         run: |
             echo "DEVKITPRO=/opt/devkitpro" >> $GITHUB_ENV
@@ -44,8 +47,13 @@ jobs:
       - name: Build application
         run: bash build.sh
       
+      - name: Rename binaries
+        run: |
+          mv build/build-3ds/packaged/main.3dsx build/build-3ds/packaged/furcadia.3dsx
+      
       - uses: actions/upload-artifact@v4
         with:
-            name: Application (3DSX)
-            path: build/build-3ds/packaged/main.3dsx
+            name: Application
+            path: |
+                build/build-3ds/packaged/furcadia.3dsx
             if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
