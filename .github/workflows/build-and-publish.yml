@@ -26,7 +26,7 @@ jobs:
         run: |
             wget https://apt.devkitpro.org/install-devkitpro-pacman
             chmod +x install-devkitpro-pacman
-            yes | ./install-devkitpro-pacman
+            yes | sudo ./install-devkitpro-pacman
             rm install-devkitpro-pacman
 
       - name: Install DevkitARM from DevkitPRO
