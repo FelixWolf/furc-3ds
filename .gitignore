@@ -37,7 +37,3 @@
 # Forbid old folder
 /old
 /tmp
-
-# Forbid confidential code
-fox5cipher.h
-fox5cipher.cpp

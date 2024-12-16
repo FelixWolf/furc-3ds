@@ -3,7 +3,7 @@
 #include "fox5.h"
 #include "LzmaDec.h"
 
-#if __has_include("fox5cipher.h")
+#ifdef HAVE_PROPRIETARY
     #include "fox5cipher.h"
     #define HAS_CIPHER
 #endif
