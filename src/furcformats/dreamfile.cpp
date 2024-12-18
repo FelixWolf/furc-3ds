@@ -97,8 +97,13 @@ Dream::Dream(const std::string& filename) :
         throw std::runtime_error("Failed to read entire map file!");
     
     if(mEncoded)
+    {
+#ifdef HAS_CIPHER
         data = decrypt(data, useOldCrypto);
-    
+#else
+        throw std::runtime_error("Can't decrypt without furccipher cipher library");
+#endif
+    }
     mTiles.resize(mWidth * mHeight);
     
     size_t offset = 0;
@@ -112,9 +117,11 @@ Dream::Dream(const std::string& filename) :
         // Extract the floor data
         std::vector<uint8_t> tmp(data.begin() + offset, data.begin() + offset + floorSize);
         std::vector<uint16_t> floors(mWidth * mHeight, 0);
+#ifdef HAS_CIPHER
         if(mEncoded)
             floors = readEncryptedDream16(tmp, mWidth, mHeight, useOldCrypto);
         else
+#endif
             for(int i = 0; i < floors.size(); i++)
                 floors[i] = tmp[i * 2] | tmp[i * 2 + 1] << 8;
         
@@ -134,9 +141,11 @@ Dream::Dream(const std::string& filename) :
         // Extract the object data
         std::vector<uint8_t> tmp(data.begin() + offset, data.begin() + offset + objectSize);
         std::vector<uint16_t> objects(mWidth * mHeight, 0);
+#ifdef HAS_CIPHER
         if(mEncoded)
             objects = readEncryptedDream16(tmp, mWidth, mHeight, useOldCrypto);
         else
+#endif
             for(int i = 0; i < objects.size(); i++)
                 objects[i] = tmp[i * 2] | tmp[i * 2 + 1] << 8;
         
@@ -157,8 +166,10 @@ Dream::Dream(const std::string& filename) :
         std::vector<uint8_t> tmp(data.begin() + offset, data.begin() + offset + wallSize);
         std::vector<uint8_t> walls(mWidth * mHeight * 2, 0);
         if(mEncoded)
+#ifdef HAS_CIPHER
             walls = readEncryptedDream8(tmp, mWidth, mHeight, useOldCrypto);
         else
+#endif
             for(int i = 0; i < walls.size(); i++)
                 walls[i] = tmp[i];
         
@@ -184,8 +195,10 @@ Dream::Dream(const std::string& filename) :
             std::vector<uint8_t> tmp(data.begin() + offset, data.begin() + offset + regionSize);
             std::vector<uint16_t> regions(mWidth * mHeight, 0);
             if(mEncoded)
+#ifdef HAS_CIPHER
                 regions = readEncryptedDream16(tmp, mWidth, mHeight, useOldCrypto);
             else
+#endif
                 for(int i = 0; i < regions.size(); i++)
                     regions[i] = tmp[i * 2] | tmp[i * 2 + 1] << 8;
             
@@ -206,8 +219,10 @@ Dream::Dream(const std::string& filename) :
             std::vector<uint8_t> tmp(data.begin() + offset, data.begin() + offset + effectSize);
             std::vector<uint16_t> effects(mWidth * mHeight, 0);
             if(mEncoded)
+#ifdef HAS_CIPHER
                 effects = readEncryptedDream16(tmp, mWidth, mHeight, useOldCrypto);
             else
+#endif
                 for(int i = 0; i < effects.size(); i++)
                     effects[i] = tmp[i * 2] | tmp[i * 2 + 1] << 8;
             
@@ -230,9 +245,11 @@ Dream::Dream(const std::string& filename) :
             // Extract the lighting data
             std::vector<uint8_t> tmp(data.begin() + offset, data.begin() + offset + lightingSize);
             std::vector<uint16_t> lighting(mWidth * mHeight, 0);
+#ifdef HAS_CIPHER
             if(mEncoded)
                 lighting = readEncryptedDream16(tmp, mWidth, mHeight, useOldCrypto);
             else
+#endif
                 for(int i = 0; i < lighting.size(); i++)
                     lighting[i] = tmp[i * 2] | tmp[i * 2 + 1] << 8;
             
@@ -253,8 +270,10 @@ Dream::Dream(const std::string& filename) :
             std::vector<uint8_t> tmp(data.begin() + offset, data.begin() + offset + ambientSize);
             std::vector<uint16_t> ambient(mWidth * mHeight, 0);
             if(mEncoded)
+#ifdef HAS_CIPHER
                 ambient = readEncryptedDream16(tmp, mWidth, mHeight, useOldCrypto);
             else
+#endif
                 for(int i = 0; i < ambient.size(); i++)
                     ambient[i] = tmp[i * 2] | tmp[i * 2 + 1] << 8;
             
