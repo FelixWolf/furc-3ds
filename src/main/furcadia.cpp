@@ -11,8 +11,6 @@
 #include <arpa/inet.h>
 #include <malloc.h>
 
-#include "unlit_generic.shbin.h"
-
 #include "furcadia.h"
 #include "fox5.h"
 #include "testimg.h"
@@ -112,7 +110,7 @@ void Furcadia::render()
     }
     C3D_FrameEnd(0);
     
-    printf("FPS %f; Update time: %f; Render time: %f\n", mFPS, mUpdateTime, mRenderTime);
+    // printf("FPS %f; Update time: %f; Render time: %f\n", mFPS, mUpdateTime, mRenderTime);
 }
 
 void Furcadia::cleanup()
