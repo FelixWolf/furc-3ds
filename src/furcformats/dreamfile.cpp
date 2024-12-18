@@ -287,8 +287,6 @@ Dream::Dream(const std::string& filename) :
     }
     
     data.resize(0); // Free up space
-    
-    printf("It's a map! Version: %i, %i\n", mVersionMajor, mVersionMinor);
 }
 
 Dream::~Dream()
