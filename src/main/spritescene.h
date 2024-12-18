@@ -9,7 +9,8 @@ public:
     SpriteScene(std::string name, std::shared_ptr<Scene> parent = nullptr)
         : Scene(name, parent) {}
         
-    std::vector<Sprite> mSprites;
+    std::vector<Sprite> mSpritesTop;
+    std::vector<Sprite> mSpritesBottom;
 };
 
 #endif // SPRITESCENE_H

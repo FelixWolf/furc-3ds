@@ -16,7 +16,7 @@ public:
     
     ~Sprite() = default;
     
-    void draw(const C3D_Mtx& projection);
+    void draw(C3D_Mtx* projection);
     
     std::shared_ptr<Shader> mShader;
     uint8_t mULoc_ModelView;
@@ -30,6 +30,7 @@ public:
     float mSize[2] = {0};
     float mColor[4] = {1.0, 1.0, 1.0, 1.0};
     float mClip[4] = {0, 0, 1.0, 1.0};
+    float mDepth = 0.0;
     
 private:
     static void* mVBOData;

@@ -107,6 +107,9 @@ Texture::Texture(uint8_t* data, uint16_t width, uint16_t height, GPU_TEXCOLOR mo
             throw std::runtime_error("Invalid texture mode");
     }
     
+    mOriginalWidth = width;
+    mOriginalHeight = height;
+    
     mWidth = nextPowerOf2(width);
     mHeight = nextPowerOf2(height);
     
@@ -128,15 +131,16 @@ Texture::Texture(FOX5Image image)
     int bpp = 4;
     GPU_TEXCOLOR mode = GPU_RGBA8;
     
-    mWidth = nextPowerOf2(image.mWidth);
-    mHeight = nextPowerOf2(image.mHeight);
-    
     mOriginalWidth = image.mWidth;
     mOriginalHeight = image.mHeight;
     
-    mClip[2] = (float)image.mWidth / (float)mWidth;
-    mClip[3] = (float)image.mHeight / (float)mHeight;
-    uint8_t* pixelSrcData = padImage(image.mData.data(), image.mWidth, image.mHeight, bpp, mWidth, mHeight, 0);
+    mWidth = nextPowerOf2(image.mWidth);
+    mHeight = nextPowerOf2(image.mHeight);
+    
+    mClip[2] = (float)mOriginalWidth / (float)mWidth;
+    mClip[3] = (float)mOriginalHeight / (float)mHeight;
+    
+    uint8_t* pixelSrcData = padImage(image.mData.data(), mOriginalWidth, mOriginalHeight, bpp, mWidth, mHeight, 0xFF);
     
     // Perform swizzling for RGBA8 mode
     if (mode == GPU_RGBA8)

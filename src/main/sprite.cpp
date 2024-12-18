@@ -48,7 +48,7 @@ void Sprite::setShader(std::shared_ptr<Shader> shader)
 }
 
 // Implement the draw method as needed
-void Sprite::draw(const C3D_Mtx& projection)
+void Sprite::draw(C3D_Mtx* projection)
 {
     mShader->bind();
     mTexture->bind(0);
@@ -58,20 +58,20 @@ void Sprite::draw(const C3D_Mtx& projection)
     Mtx_Translate(&modelView,
         mPosition[0] + mOffset[0],
         -(mPosition[1] + mOffset[1]),
-        0,
+        mDepth,
         false
     );
     Mtx_Scale(&modelView, mSize[0], mSize[1], 0);
     
     C3D_FixedAttribSet(2, mColor[0], mColor[1], mColor[2], mColor[3]);
     C3D_FixedAttribSet(3,
-        mTexture->mClip[0] + mClip[0],
-        mTexture->mClip[1] + mClip[1],
-        mTexture->mClip[2] + mClip[2],
-        mTexture->mClip[3] + mClip[3]
+        mTexture->mClip[0] + mClip[0] * (mTexture->mClip[2] - mTexture->mClip[0]),
+        mTexture->mClip[1] + mClip[1] * (mTexture->mClip[3] - mTexture->mClip[1]),
+        mTexture->mClip[0] + mClip[2] * (mTexture->mClip[2] - mTexture->mClip[0]),
+        mTexture->mClip[1] + mClip[3] * (mTexture->mClip[3] - mTexture->mClip[1])
     );
     
-    C3D_FVUnifMtx4x4(GPU_VERTEX_SHADER, mULoc_Projection, &projection);
+    C3D_FVUnifMtx4x4(GPU_VERTEX_SHADER, mULoc_Projection, projection);
     C3D_FVUnifMtx4x4(GPU_VERTEX_SHADER, mULoc_ModelView, &modelView);
     C3D_DrawArrays(GPU_TRIANGLES, 0, mVertexListCount);
 }
