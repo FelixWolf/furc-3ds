@@ -62,7 +62,7 @@ void Shader::bind()
     AttrInfo_AddLoader(attrInfo, 0, GPU_FLOAT, 3); // v0=position
     AttrInfo_AddLoader(attrInfo, 1, GPU_FLOAT, 2); // v1=texcoords
     AttrInfo_AddFixed(attrInfo, 2); // v2=color
-    AttrInfo_AddFixed(attrInfo, 3); // v2=color
+    AttrInfo_AddFixed(attrInfo, 3); // v3=clip
     
     C3D_BindProgram(&mProgram);
 }
