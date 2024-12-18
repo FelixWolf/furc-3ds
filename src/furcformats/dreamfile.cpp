@@ -2,7 +2,9 @@
 #include <algorithm>
 #include "filecommon.h"
 #include "dreamfile.h"
-#include "furccipher.h"
+#ifdef HAS_CIPHER
+    #include "furccipher.h"
+#endif
 
 Dream::Dream(const std::string& filename) :
     mFile(filename, std::ios::in | std::ios::binary)
