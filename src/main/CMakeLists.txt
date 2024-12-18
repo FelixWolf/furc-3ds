@@ -79,7 +79,7 @@ if (N3DS)
     dkp_target_generate_symbol_list(${PROJECT_NAME})
 endif()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE lzma fox5)
+target_link_libraries(${PROJECT_NAME} PRIVATE lzma furcformats)
 target_compile_options(${PROJECT_NAME} PRIVATE -Og)
 
 add_custom_target(ElfTo3dsx ALL
