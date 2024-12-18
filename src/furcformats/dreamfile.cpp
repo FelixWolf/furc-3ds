@@ -167,8 +167,8 @@ Dream::Dream(const std::string& filename) :
         // Extract the wall data
         std::vector<uint8_t> tmp(data.begin() + offset, data.begin() + offset + wallSize);
         std::vector<uint8_t> walls(mWidth * mHeight * 2, 0);
-        if(mEncoded)
 #ifdef HAS_CIPHER
+        if(mEncoded)
             walls = readEncryptedDream8(tmp, mWidth, mHeight, useOldCrypto);
         else
 #endif
@@ -196,8 +196,8 @@ Dream::Dream(const std::string& filename) :
             // Extract the region data
             std::vector<uint8_t> tmp(data.begin() + offset, data.begin() + offset + regionSize);
             std::vector<uint16_t> regions(mWidth * mHeight, 0);
-            if(mEncoded)
 #ifdef HAS_CIPHER
+            if(mEncoded)
                 regions = readEncryptedDream16(tmp, mWidth, mHeight, useOldCrypto);
             else
 #endif
@@ -220,8 +220,8 @@ Dream::Dream(const std::string& filename) :
             // Extract the region data
             std::vector<uint8_t> tmp(data.begin() + offset, data.begin() + offset + effectSize);
             std::vector<uint16_t> effects(mWidth * mHeight, 0);
-            if(mEncoded)
 #ifdef HAS_CIPHER
+            if(mEncoded)
                 effects = readEncryptedDream16(tmp, mWidth, mHeight, useOldCrypto);
             else
 #endif
@@ -271,8 +271,8 @@ Dream::Dream(const std::string& filename) :
             // Extract the ambient data
             std::vector<uint8_t> tmp(data.begin() + offset, data.begin() + offset + ambientSize);
             std::vector<uint16_t> ambient(mWidth * mHeight, 0);
-            if(mEncoded)
 #ifdef HAS_CIPHER
+            if(mEncoded)
                 ambient = readEncryptedDream16(tmp, mWidth, mHeight, useOldCrypto);
             else
 #endif
