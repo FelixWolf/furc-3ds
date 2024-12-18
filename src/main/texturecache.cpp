@@ -1,8 +1,8 @@
 #include "texturecache.h"
 
-std::shared_ptr<Texture> TextureCache::getFromFox(FOX5File& fox, uint32_t ptr)
+std::shared_ptr<Texture> TextureCache::getFromFox(FOX5& fox, uint32_t ptr)
 {
-    auto itOuter = mTextureMap.find(fox.mName); // Check if 'name' exists in the outer map
+    auto itOuter = mTextureMap.find(fox.mFileName); // Check if 'name' exists in the outer map
     if (itOuter != mTextureMap.end()) {
         auto itInner = itOuter->second.find(ptr); // Check if 'ptr' exists in the inner map
         if (itInner != itOuter->second.end()) {
@@ -22,7 +22,7 @@ std::shared_ptr<Texture> TextureCache::getFromFox(FOX5File& fox, uint32_t ptr)
     newEntry.mTexture = texture;
     newEntry.mLastUse = mCurrentAge;
 
-    mTextureMap[fox.mName].emplace(ptr, newEntry);
+    mTextureMap[fox.mFileName].emplace(ptr, newEntry);
 
     // Return the shared pointer
     return texture;

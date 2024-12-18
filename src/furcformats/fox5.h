@@ -74,7 +74,7 @@ public:
     };
     using FOX5Value = std::variant<uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t, std::string, std::vector<uint8_t>>;
 
-    struct Value {
+    struct Value_t {
         Type mType;
         FOX5Value mValue;
 
@@ -98,7 +98,7 @@ public:
         }
     };
     
-    std::vector<Value> mValues;
+    std::vector<Value_t> mValues;
     void addValue(Type type, const FOX5Value& v)
     {
         mValues.push_back({type, v});
@@ -108,13 +108,13 @@ public:
         mValues.reserve(mValues.size() + n);
     };
     
-    const std::vector<Value>& getValues() const
+    const std::vector<Value_t>& getValues() const
     {
         return mValues;
     };
     
     template <typename T>
-    const Value& getValue(size_t index) const
+    const Value_t& getValue(size_t index) const
     {
         return std::get<T>(mValues[index].mValue);
     }
@@ -279,15 +279,15 @@ public:
     
     uint8_t mRatio[2] = {0,0};
     
-    struct Kitterspeak {
+    struct Kitterspeak_t {
         uint16_t mCommand;
         int16_t mArg1;
         int16_t mArg2;
-        Kitterspeak(uint16_t command, int16_t arg1, int16_t arg2)
+        Kitterspeak_t(uint16_t command, int16_t arg1, int16_t arg2)
             : mCommand(command), mArg1(arg1), mArg2(arg2) {}
     };
     
-    std::vector<std::shared_ptr<Kitterspeak>> mKitterspeak;
+    std::vector<std::shared_ptr<Kitterspeak_t>> mKitterspeak;
     
     std::vector<std::shared_ptr<FOX5Frame>> mFrames;
     
@@ -367,13 +367,13 @@ public:
     };
 };
 
-class FOX5File : FOX5List
+class FOX5 : FOX5List
 {
 protected:
     std::ifstream mFile;
 
 public: // Footer
-    std::string mName;
+    std::string mFileName;
     
     uint8_t mSeed[16] = {0};
     
@@ -402,8 +402,8 @@ public: // FOX5List
 public:
     FOX5Image getImage(uint32_t id);
 public:
-    FOX5File(const std::string& filename);
-    ~FOX5File();
+    FOX5(const std::string& filename);
+    ~FOX5();
     
     void parseData(uint8_t** dataPtr, uint8_t* dataEnd);
 };

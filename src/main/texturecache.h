@@ -26,7 +26,7 @@ public:
         shift(mMaxAge);
     };
     
-    std::shared_ptr<Texture> getFromFox(FOX5File& fox, uint32_t ptr);
+    std::shared_ptr<Texture> getFromFox(FOX5& fox, uint32_t ptr);
 };
 
 #endif // TEXTURECACHE_H
